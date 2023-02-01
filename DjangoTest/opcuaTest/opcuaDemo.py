@@ -40,13 +40,10 @@ class uaClient(object):
         # url = 'opc.tcp://commsvr.com:51234/UA/CAS_UA_Server'
         async with Client(url=self.url) as self.client:
             await self.client.connect()
-
             mydata=Database.Database()
             mydata.update_connect(self.url,'true')
             mydata.Log(str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))),'connect',self.url,'true')
             mydata.close()
-
-
             #下面的东西可以不用
             root = self.client.nodes.root
             nodes = [{'id': 1, 'node': root}]
@@ -82,7 +79,6 @@ class uaClient(object):
     async def myRead(self,u,nodeid):
         self.url=u
         res=[]
-        # models.connect_temp.objects.create(url=self.url,nodeid=nodeid,timestamps=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))))
         async with Client(url=self.url) as self.client:
             mydata = Database.Database()
             mydata.read_log(self.url,nodeid,str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))))
@@ -133,9 +129,9 @@ class uaClient(object):
     #     async with Client(url=self.url) as self.client:
     #         mynode=self.client.get_node(nodeid)
     #         handler=SubHandler()
-    #         sub=self.client.create_subscription(500,handler)
-    #         sub.subscribe_data_change(mynode)
-    #         print(sub.subscribe_data_change(mynode))
+    #         subscribe=self.client.create_subscription(500,handler)
+    #         subscribe.subscribe_data_change(mynode)
+    #         print(subscribe.subscribe_data_change(mynode))
     #         time.sleep(500)
 
 

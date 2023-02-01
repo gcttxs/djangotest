@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'opcuaTest',
     'corsheaders',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

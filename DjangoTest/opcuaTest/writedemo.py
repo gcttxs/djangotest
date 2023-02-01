@@ -9,13 +9,17 @@ from opcuaTest.opcuaDemo import uaClient
 from django.http import HttpResponse
 import asyncio
 import xml
+from fastapi import FastAPI
+app = FastAPI()
+
 
 class WriteClient(object):
+
     def Write(self,u,nodeid,value):#nodeid和value是含多个元素的字符串形式列表，测试多个节点的写入
         # myvalue = value.split('/')
         value=str(value)
-        print(type(value))
-        print(f'u是{u}；nodeid是{nodeid}； 写入value是{value}')
+        # print(type(value))
+        # print(f'u是{u}；nodeid是{nodeid}； 写入value是{value}')
         self.url=u
         client = Client(u)
         # 连接客户端
@@ -32,34 +36,33 @@ class WriteClient(object):
         # 通过get_value读值
         print(f'原本该节点数值为{var.get_value()}')                  #获取nodeid原本数据
         # 判断写入的数据类型进行操作
-        if value =="False":
+        flag = False
+        if value == "False":
             print("布尔类型写入")
             dv1 = ua.DataValue(False)
             var.set_value(dv1)
-        if value =="True":
+            flag = True
+        if value == "True":
             print("布尔类型写入")
             dv1 = ua.DataValue(True)
             var.set_value(dv1)
-        if isinstance(value,float) ==True:
+            flag = True
+        if isinstance(value, float) == True:
             print("浮点类型写入")
-            var_float =float(value)
-            # var = client.get_node(nodeid)
-            print(var.get_value())
+            var_float = float(value)
             dv = ua.DataValue(ua.Variant(var_float, ua.VariantType.Float))
-            ##数据类型要这样写入,尽量不要出现Double和Float两种类型
-            # dv = ua.DataValue(ua.Variant(var_float, ua.VariantType.Float))
-            # 写入var
             var.set_value(dv)
-            # print(var.get_value())
-        if isinstance(value,int) ==True:
+            flag = True
+        if isinstance(value, int) == True:
             print("整形写入")
             var_int = int(value)
             dv = ua.DataValue(ua.Variant(var_int, ua.VariantType.Int16))
             var.set_value(dv)
-        else:
+            flag = True
+        if flag == False:
             print("数据类型识别失败")
         timestamps=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
-        print(f'最后结果{var.get_value()}')
+        # print(f'最后结果{var.get_value()}')
         return value,self.url,nodeid,timestamps
         # 读写一个int值
         # double_node = client.get_node('ns=3;s="数据块_1"."num5"')
@@ -102,7 +105,6 @@ class SubClient(object):
             print(i)
             stres += str(i)
         return stres
-
         time.sleep(100000)
         client.disconnect()
 
