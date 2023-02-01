@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        async function subscribe() {
+            let url = document.getElementById("url").value
+            let nodeid = document.getElementById("nodeid").value
+            let response = await fetch(`/subscribe/?url=${url}&nodeid=${nodeid}`)
+            let data = await response.json()
+            document.getElementById("value").innerHTML = data.value
+        }
+        setInterval(subscribe, 500)
+    </script>
+</head>
+<body>
+    <input type="text" id="url" value="opc.tcp://127.0.0.1:4841/anqu_opcua_server">
+    <input type="text" id="nodeid" value="ns=2;i=2">
+    <p>Value: <span id="value"></span></p>
+</body>
+</html>
